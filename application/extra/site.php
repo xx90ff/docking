@@ -40,4 +40,10 @@ return array (
     'client_id' => 'c346b8b39599aaa677',
     'client_secret' => 'b27a803f9bcbd1de827381d1908bb00e',
   ),
+  'fxiaoke' => 
+  array (
+    'appId' => '',
+    'appSecret' => '',
+    'permanentCode' => '',
+  ),
 );

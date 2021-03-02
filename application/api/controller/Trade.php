@@ -4,6 +4,7 @@ namespace app\api\controller;
 
 use app\common\controller\Api;
 use Youzan\Open\Helper\CryptoHelper;
+use app\common\library\Fxiaoke;
 
 /**
  * 有赞-CRM对接接口
@@ -63,6 +64,9 @@ class Trade extends Api
      */
     protected function tradeCreate($msg)
     {
+        $fxiaoke = new Fxiaoke();
+        $fxiaoke->getAccessToken();
+        print_r($fxiaoke);die;
         echo 'tradeCreate';
     }
 
