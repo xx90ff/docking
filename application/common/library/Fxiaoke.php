@@ -2,6 +2,7 @@
 
 namespace app\common\library;
 
+use fast\Http;
 use think\Config;
 
 /**
@@ -69,6 +70,14 @@ class Fxiaoke
      */
     public function getAccessToken()
     {
-        echo 123465;die;
+        //组装请求参数
+        $params = [
+            'appId' => $this->options['appId'],
+            'appSecret' => $this->options['appSecret'],
+            'permanentCode' => $this->options['permanentCode']
+        ];
+
+        $result = Http::sendRequest($this->domain.$this->api['getAccessToken'],$params, 'POST');
+        print_r($result);die;
     }
 }
