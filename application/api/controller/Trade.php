@@ -71,8 +71,9 @@ class Trade extends Api
      */
     protected function tradeCreate()
     {
-        print_r($this->data);die;
-        $this->fxiaoke->getByMobile('13439302541');
+        //同步CRM销售订单
+        $result = $this->fxiaoke->createOrder($this->data);
+        print_r($result);die;
         echo 'tradeCreate';
     }
 
@@ -95,7 +96,7 @@ class Trade extends Api
     }
 
     /**
-     * 保存推送记录
+     * 保存记录
      *
      */
     protected function savePushLog($push_type,$push_data,$sync_status,$sync_result)

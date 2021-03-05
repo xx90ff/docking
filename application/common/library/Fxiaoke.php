@@ -43,6 +43,7 @@ class Fxiaoke
     protected $api = [
         'getByMobile' => 'cgi/user/getByMobile',  //根据手机号查询员工
         'getAccessToken' => 'cgi/corpAccessToken/get/V2',  //获取AccessToken
+        'describe' => 'cgi/crm/v2/object/describe',  //获取销售订单对象描述接口
         'createOrder' => 'cgi/crm/v2/data/create',  //创建销售订单对象
     ];
 
@@ -95,9 +96,52 @@ class Fxiaoke
      * 创建销售订单对象
      *
      */
-    public function createOrder()
+    public function createOrder($data)
     {
+        //产品合计
+        $product_amount = 0;
+        foreach ($data['full_order_info']['orders'] as $k=>$v){
+            $product_amount += $v['num'];
+        }
 
+        //组装参数
+        $params  = [
+            'corpAccessToken' => $this->token,
+            'corpId' => $this->corpId,
+            'currentOpenUserId' => $this->openUserId,
+            'data' => [
+                'object_data' => [
+                    'dataObjectApiName' => "SalesOrderObj",
+                    'order_time' => $data['full_order_info']['order_info']['created'],
+                    'ship_to_id' => $data['full_order_info']['address_info']['receiver_name'],
+                    'order_status' => $data['full_order_info']['order_info']['status'],
+                    'field_AoeY5__c' => $data['full_order_info']['source_info']['book_key'],
+                    'field_Td3Of__c' => $data['full_order_info']['order_info']['pay_type'],
+                    'product_amount' => $product_amount,
+                    'ship_to_tel ' => $data['full_order_info']['address_info']['receiver_tel'],
+                ],
+//                'details' => []
+            ],
+        ];
+
+        return Http::sendRequest($this->domain.$this->api['createOrder'],$params, 'POST');
+    }
+
+    /**
+     * 获取销售订单对象描述接口
+     *
+     */
+    public function describe()
+    {
+         //组装参数
+        $params  = [
+            'corpAccessToken' => $this->token,
+            'corpId' => $this->corpId,
+            'currentOpenUserId' => $this->openUserId,
+            'apiName' => 'SalesOrderObj',
+        ];
+
+        return Http::sendRequest($this->domain.$this->api['describe'],$params, 'POST');
     }
 
     /**
@@ -107,12 +151,12 @@ class Fxiaoke
     public function getByMobile($mobile)
     {
         //组装参数
-        $data  = [
+        $params  = [
             'corpAccessToken' => $this->token,
             'corpId' => $this->corpId,
             'mobile' => $mobile,
         ];
 
-        return Http::sendRequest($this->domain.$this->api['getByMobile'],$data, 'POST');
+        return Http::sendRequest($this->domain.$this->api['getByMobile'],$params, 'POST');
     }
 }
