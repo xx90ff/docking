@@ -60,7 +60,7 @@ class Http
             } else {
                 $defaults[CURLOPT_CUSTOMREQUEST] = $method;
             }
-            $defaults[CURLOPT_POSTFIELDS] = $params;
+            $defaults[CURLOPT_POSTFIELDS] = json_encode($params);
         }
 
         $defaults[CURLOPT_HEADER] = false;
@@ -71,7 +71,7 @@ class Http
         $defaults[CURLOPT_TIMEOUT] = 3;
 
         // disable 100-continue
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Expect:'));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: application/json"));
 
         if ('https' == $protocol) {
             $defaults[CURLOPT_SSL_VERIFYPEER] = false;
@@ -95,10 +95,10 @@ class Http
             ];
         }
         curl_close($ch);
-        return [
-            'ret' => true,
-            'msg' => $ret,
-        ];
+
+        $result = json_decode($ret,true);
+
+        return $result;
     }
 
     /**

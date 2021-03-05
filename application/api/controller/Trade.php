@@ -4,6 +4,7 @@ namespace app\api\controller;
 
 use app\common\controller\Api;
 use app\common\library\Fxiaoke;
+use app\admin\model\PushLog;
 //use Youzan\Open\Helper\CryptoHelper;
 
 /**
@@ -13,6 +14,9 @@ class Trade extends Api
 {
     protected $noNeedLogin = ['*'];
     protected $noNeedRight = ['*'];
+
+    protected $fxiaoke = '';
+    protected $data = '';
 
     /**
      * 接收有赞推送消息
@@ -37,23 +41,22 @@ class Trade extends Api
         }
 
         //msg内容经过 urlencode 编码，需进行解码
-        $msg = json_decode(urldecode($msg),true);
+        $this->data = json_decode(urldecode($msg),true);
 
         //实例化纷享销客CRM操作类
-        $fxiaoke = Fxiaoke::instance();
-        $fxiaoke->getAccessToken();
+        $this->fxiaoke = Fxiaoke::instance();
 
         //根据 type 来识别消息事件类型
         switch ($data['type'])
         {
             case 'trade_TradeCreate':
-               $this->tradeCreate($fxiaoke,$msg);
+               $this->tradeCreate();
                 break;
             case 'trade_TradePaid':
-                $this->tradePaid($fxiaoke,$msg);
+                $this->tradePaid();
                 break;
             case 'trade_TradeSuccess':
-                $this->tradeSuccess($fxiaoke,$msg);
+                $this->tradeSuccess();
                 break;
             default:
                 $this->error(__('Invalid type'));
@@ -66,8 +69,10 @@ class Trade extends Api
      * 交易创建
      *
      */
-    protected function tradeCreate($fxiaoke,$msg)
+    protected function tradeCreate()
     {
+        print_r($this->data);die;
+        $this->fxiaoke->getByMobile('13439302541');
         echo 'tradeCreate';
     }
 
@@ -75,7 +80,7 @@ class Trade extends Api
      * 交易支付
      *
      */
-    protected function tradePaid($fxiaoke,$msg)
+    protected function tradePaid()
     {
         echo 'tradePaid';
     }
@@ -84,8 +89,25 @@ class Trade extends Api
      * 交易成功
      *
      */
-    protected function tradeSuccess($fxiaoke,$msg)
+    protected function tradeSuccess()
     {
         echo 'tradeCreate';
+    }
+
+    /**
+     * 保存推送记录
+     *
+     */
+    protected function savePushLog($push_type,$push_data,$sync_status,$sync_result)
+    {
+        //组装参数
+        $data  = [
+            'push_type' => $push_type,
+            'trigger_time' => time(),
+            'push_data' => $push_data,
+            'sync_status' => 0,
+            'sync_result' => $sync_result,
+            'sync_time' => time(),
+        ];
     }
 }

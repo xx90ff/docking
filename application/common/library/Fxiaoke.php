@@ -4,6 +4,7 @@ namespace app\common\library;
 
 use fast\Http;
 use think\Config;
+use think\Cache;
 
 /**
  * 纷享销客CRM
@@ -17,26 +18,32 @@ class Fxiaoke
     protected static $instance;
 
     /**
-     * CorpAccessToken有效时长
-     * @var int
+     * Token
      */
-    protected static $expire = 7200;
+    protected $token = '';
 
     /**
-     * 默认配置
+     * corpId
      */
-    public $options = [];
+    protected $corpId = '';
+
+    /**
+     * openUserId
+     */
+    protected $openUserId = '';
 
     /**
      * 请求地址
      */
-    protected static $domain = 'https://open.fxiaoke.com/';
+    protected  $domain = 'https://open.fxiaoke.com/';
 
     /**
      * 接口地址
      */
-    public $api = [
-        'getAccessToken' => 'cgi/corpAccessToken/get/V2'  //获取AccessToken
+    protected $api = [
+        'getByMobile' => 'cgi/user/getByMobile',  //根据手机号查询员工
+        'getAccessToken' => 'cgi/corpAccessToken/get/V2',  //获取AccessToken
+        'createOrder' => 'cgi/crm/v2/data/create',  //创建销售订单对象
     ];
 
 
@@ -61,7 +68,18 @@ class Fxiaoke
      */
     public function __construct($options = [])
     {
-        $this->options = config::get('site.fxiaoke');
+        $this->corpId = config::get('site.corpId');
+        $this->openUserId = config::get('site.openUserId');
+
+        //token是否过期
+        $this->token = Cache::get("corpAccessToken");
+        if (!$this->token) {
+            $resToken = $this->getAccessToken();
+            if(isset($resToken['errorCode']) && $resToken['errorCode'] == 0){
+                $this->token = $resToken['corpAccessToken'];
+                Cache::set("corpAccessToken", $resToken['corpAccessToken'], $resToken['expiresIn']);
+            }
+        }
     }
 
     /**
@@ -70,14 +88,31 @@ class Fxiaoke
      */
     public function getAccessToken()
     {
-        //组装请求参数
-        $params = [
-            'appId' => $this->options['appId'],
-            'appSecret' => $this->options['appSecret'],
-            'permanentCode' => $this->options['permanentCode']
+        return Http::sendRequest($this->domain.$this->api['getAccessToken'],config::get('site.fxiaoke'), 'POST');
+    }
+
+    /**
+     * 创建销售订单对象
+     *
+     */
+    public function createOrder()
+    {
+
+    }
+
+    /**
+     * 根据手机号查询员工
+     *
+     */
+    public function getByMobile($mobile)
+    {
+        //组装参数
+        $data  = [
+            'corpAccessToken' => $this->token,
+            'corpId' => $this->corpId,
+            'mobile' => $mobile,
         ];
 
-        $result = Http::sendRequest($this->domain.$this->api['getAccessToken'],$params, 'POST');
-        print_r($result);die;
+        return Http::sendRequest($this->domain.$this->api['getByMobile'],$data, 'POST');
     }
 }
