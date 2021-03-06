@@ -44,9 +44,6 @@ class Trade extends Api
         //msg内容经过 urlencode 编码，需进行解码
         $this->data = json_decode(urldecode($msg),true);
 
-        //查询是否存在此订单
-        $this->isRecord = PushLog::where(['order_sn'=>$this->data['full_order_info']['order_info']['tid']])->column('id') ? 1 : 0;
-
         //实例化纷享销客CRM操作类
         $this->fxiaoke = Fxiaoke::instance();
 
@@ -73,6 +70,9 @@ class Trade extends Api
      */
     protected function tradeCreate()
     {
+        //查询是否存在此订单
+        $this->isRecord = PushLog::where(['push_type'=>'create','order_sn'=>$this->data['full_order_info']['order_info']['tid']])->column('id') ? 1 : 0;
+
         //验证客户是否存在
         $accountList = $this->fxiaoke->getList('AccountObj',[
             [
