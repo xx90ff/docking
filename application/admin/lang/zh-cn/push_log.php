@@ -2,6 +2,7 @@
 
 return [
     'Id'                => 'ID',
+    'Order_sn'          => '订单号',
     'Push_type'         => '触发场景',
     'Push_type create'  => '交易创建',
     'Push_type paid'    => '交易支付',

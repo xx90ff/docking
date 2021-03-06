@@ -15,8 +15,9 @@ class Trade extends Api
     protected $noNeedLogin = ['*'];
     protected $noNeedRight = ['*'];
 
-    protected $fxiaoke = '';
+    protected $isRecord = '';
     protected $data = '';
+    protected $fxiaoke = '';
 
     /**
      * 接收有赞推送消息
@@ -32,16 +33,19 @@ class Trade extends Api
         //获取有赞默认配置
         $youzan = config('site.youzan');
 
-        //判断消息是否合法，若合法则返回成功标识
+        //判断消息是否合法
         $msg = $data['msg'];
         $sign_string = $youzan['client_id']."".$msg."".$youzan['client_secret'];
         $sign = md5($sign_string);
         if($sign != $data['sign']){
-            $this->error(__('Invalid sign'));
+            exit();
         }
 
         //msg内容经过 urlencode 编码，需进行解码
         $this->data = json_decode(urldecode($msg),true);
+
+        //查询是否存在此订单
+        $this->isRecord = PushLog::where(['order_sn'=>$this->data['full_order_info']['order_info']['tid']])->column('id') ? 1 : 0;
 
         //实例化纷享销客CRM操作类
         $this->fxiaoke = Fxiaoke::instance();
@@ -59,10 +63,8 @@ class Trade extends Api
                 $this->tradeSuccess();
                 break;
             default:
-                $this->error(__('Invalid type'));
+                exit();
         }
-
-        //$this->success('请求成功');
     }
 
     /**
@@ -71,10 +73,48 @@ class Trade extends Api
      */
     protected function tradeCreate()
     {
+        //验证客户是否存在
+        $accountList = $this->fxiaoke->getList('AccountObj',[
+            [
+                'field_name' => 'tel',
+                'field_values' => $this->data['full_order_info']['address_info']['receiver_tel'],
+                'operator' => 'EQ',
+            ],
+            [
+                'field_name' => 'life_status',
+                'field_values' => 'normal',
+                'operator' => 'EQ',
+            ]
+        ]);
+
+        if(count($accountList['data']['dataList'])  == 0){
+            //创建客户
+            $result = $this->fxiaoke->createAccount($this->data['full_order_info']);
+
+            //创建失败
+            if($result['errorCode'] != 0){
+                $this->savePushLog('create',0,$result);
+                exit();
+            }
+
+            $dataId = $result['dataId'];
+        }else{
+            $result = $accountList['data']['dataList'][0];
+            $dataId = $result['_id'];
+        }
+
         //同步CRM销售订单
-        $result = $this->fxiaoke->createOrder($this->data);
-        print_r($result);die;
-        echo 'tradeCreate';
+        $result = $this->fxiaoke->createOrder($this->data,$dataId);
+
+        //同步状态
+        if($result['errorCode'] == 0){
+            //保存同步结果
+            $this->savePushLog('create',1,$result);
+            $this->success('success',null,0);
+        }else{
+            $this->savePushLog('create',0,$result);
+            exit();
+        }
     }
 
     /**
@@ -99,16 +139,19 @@ class Trade extends Api
      * 保存记录
      *
      */
-    protected function savePushLog($push_type,$push_data,$sync_status,$sync_result)
+    protected function savePushLog($push_type,$sync_status,$sync_result)
     {
         //组装参数
         $data  = [
+            'order_sn' => $this->data['full_order_info']['order_info']['tid'],
             'push_type' => $push_type,
             'trigger_time' => time(),
-            'push_data' => $push_data,
-            'sync_status' => 0,
-            'sync_result' => $sync_result,
+            'push_data' => json_encode($this->data),
+            'sync_status' => $sync_status,
+            'sync_result' => json_encode($sync_result),
             'sync_time' => time(),
         ];
+
+        $this->isRecord ? PushLog::where(['order_sn'=>$data['order_sn'],'push_type'=>$push_type])->update($data) : PushLog::insert($data);
     }
 }
