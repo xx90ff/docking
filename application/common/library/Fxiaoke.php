@@ -42,10 +42,12 @@ class Fxiaoke
      */
     protected $api = [
         'getAccessToken' => 'cgi/corpAccessToken/get/V2',  //获取AccessToken
-        'getList' => 'cgi/crm/v2/data/query ',  //根据条件查询列表
+        'getList' => 'cgi/crm/v2/data/query',  //根据条件查询列表
+        'getOne' => 'cgi/crm/v2/data/get',  //查询单个对象信息
         'getByMobile' => 'cgi/user/getByMobile',  //根据手机号查询员工
         'describe' => 'cgi/crm/v2/object/describe',  //获取对象描述接口
         'create' => 'cgi/crm/v2/data/create',  //创建对象
+        'update' => 'cgi/crm/v2/data/update',  //修改对象
     ];
 
 
@@ -100,7 +102,7 @@ class Fxiaoke
     public function createOrder($data,$account_id)
     {
         //产品详情
-        $details = [];
+        $salesOrderProductObj = [];
 
         //根据产品编码查询产品详细信息
         foreach ($data['full_order_info']['orders'] as $k=>$v){
@@ -128,7 +130,7 @@ class Fxiaoke
                         'field_mgM2m__c' => $goodsList['data']['dataList'][0]['category'],
                         'name' => $goodsList['data']['dataList'][0]['product_code'],
                     ];
-                    array_push($details,$goods);
+                    array_push($salesOrderProductObj,$goods);
                 }
             }
         }
@@ -155,7 +157,68 @@ class Fxiaoke
                     'order_time' => date('ymd',strtotime($data['full_order_info']['order_info']['created'])),
                 ],
                 'details' => [
-                    'SalesOrderProductObj' => $details
+                    'SalesOrderProductObj' => $salesOrderProductObj
+                ]
+            ],
+        ];
+
+        return Http::sendRequest($this->domain.$this->api['create'],$params, 'POST');
+    }
+
+    /**
+     * 创建回款对象
+     *
+     */
+    public function createPaymentObj($data,$orders)
+    {
+        //获取订单产品
+        $goodsList = $this->getList('SalesOrderProductObj',[
+            [
+                'field_name' => 'field_fb1ce__c',
+                'field_values' => $orders['name'],
+                'operator' => 'EQ',
+            ]
+        ]);
+
+        $orderPaymentObj = [];
+        foreach ($goodsList['data']['dataList'] as $k=>$v){
+            $obj = [
+                'field_lC6gi__c' => $v['subtotal'],
+                'payment_amount' => $data['orders'][$k]['payment'],
+                'account_id' => $orders['account_id'],
+                'order_id' => $v['order_id'],
+                'field_7UTb1__c' => '123456',
+                'field_BGl0D__c' => $v['_id'],
+                'field_omXMk__c' => $v['field_3ZB9M__c'],
+                'field_kC1f7__c' => $v['field_mgM2m__c'],
+                'payment_time' => date('ymd',strtotime($data['order_info']['pay_time'])),
+            ];
+
+            array_push($orderPaymentObj,$obj);
+        }
+
+        //组装参数
+        $params  = [
+            'corpAccessToken' => $this->token,
+            'corpId' => $this->corpId,
+            'currentOpenUserId' => $this->openUserId,
+            'data' => [
+                'object_data' => [
+                    'dataObjectApiName' => "PaymentObj",
+                    'payment_time' => date('ymd',strtotime($data['order_info']['pay_time'])),
+                    'field_o2Q55__c' => $orders['account_id'],
+                    'payment_amount' => $data['pay_info']['payment'],
+                    'field_s6c8v__c' => 'option1',
+                    'order_id' => $orders['extend_obj_data_id'],
+                    'field_7cvz9__c' => 'hID1cebo2',
+                    'owner' => ['FSUID_348A0A10A4E05B7D8A04ADFEBB064DB1'],//负责人
+                    'payment_term' => 'p4a0vc4FS',
+                    'field_h0A7N__c' => 'wzNpHC5Kj',
+                    'field_ak3f4__c' => 'Wfng06MG2',
+                    'account_id' => $orders['account_id'],
+                ],
+                'details' => [
+                    'OrderPaymentObj' => $orderPaymentObj
                 ]
             ],
         ];
@@ -194,6 +257,52 @@ class Fxiaoke
         return Http::sendRequest($this->domain.$this->api['create'],$params, 'POST');
     }
 
+
+    /**
+     * 修改销售订单对象
+     *
+     */
+    public function updateOrder($data,$orders,$update)
+    {
+        $object_data = [
+            'dataObjectApiName' => "SalesOrderObj",
+            '_id' => $orders['_id'],
+        ];
+
+        $object_data = array_merge($object_data,$update);
+
+        //组装参数
+        $params  = [
+            'corpAccessToken' => $this->token,
+            'corpId' => $this->corpId,
+            'currentOpenUserId' => $this->openUserId,
+            'data' => [
+                'object_data' =>$object_data
+            ],
+        ];
+
+        return Http::sendRequest($this->domain.$this->api['update'],$params, 'POST');
+    }
+
+    /**
+     * 查询单个对象信息
+     *
+     */
+    public function getOne($apiName,$id)
+    {
+        //组装参数
+        $params  = [
+            'corpAccessToken' => $this->token,
+            'corpId' => $this->corpId,
+            'currentOpenUserId' => $this->openUserId,
+            'data' => [
+                'dataObjectApiName' => $apiName,
+                'objectDataId' => $id
+            ],
+        ];
+
+        return Http::sendRequest($this->domain.$this->api['getOne'],$params, 'POST');
+    }
 
     /**
      * 根据条件查询列表

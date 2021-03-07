@@ -4,14 +4,14 @@
  Source Server         : 本地
  Source Server Type    : MySQL
  Source Server Version : 50726
- Source Host           : 127.0.0.1:3306
+ Source Host           : localhost:3306
  Source Schema         : docking
 
  Target Server Type    : MySQL
  Target Server Version : 50726
  File Encoding         : 65001
 
- Date: 05/03/2021 13:25:12
+ Date: 07/03/2021 17:34:19
 */
 
 SET NAMES utf8mb4;
@@ -38,12 +38,12 @@ CREATE TABLE `fa_admin`  (
   `status` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'normal' COMMENT '状态',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `username`(`username`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '管理员表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '管理员表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of fa_admin
 -- ----------------------------
-INSERT INTO `fa_admin` VALUES (1, 'admin', 'Admin', '4c39215188c0d057d3160fe6e30e7296', '5e0721', '/assets/img/avatar.png', 'admin@admin.com', 0, 1614907361, '127.0.0.1', 1492186163, 1614907361, '0168fb43-bb14-498d-b799-8e393a40cc3b', 'normal');
+INSERT INTO `fa_admin` VALUES (1, 'admin', 'Admin', '4c39215188c0d057d3160fe6e30e7296', '5e0721', '/assets/img/avatar.png', 'admin@admin.com', 0, 1615081904, '127.0.0.1', 1492186163, 1615081904, 'e5dc00f4-e1f0-4a5a-8348-ddcb87777abd', 'normal');
 
 -- ----------------------------
 -- Table structure for fa_admin_log
@@ -61,7 +61,7 @@ CREATE TABLE `fa_admin_log`  (
   `createtime` int(10) NULL DEFAULT NULL COMMENT '操作时间',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `name`(`username`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 53 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '管理员日志表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 60 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '管理员日志表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of fa_admin_log
@@ -118,6 +118,13 @@ INSERT INTO `fa_admin_log` VALUES (49, 1, 'admin', '/ozEyjwQdGP.php/general/conf
 INSERT INTO `fa_admin_log` VALUES (50, 1, 'admin', '/ozEyjwQdGP.php/general.config/add', '常规管理 / 系统配置 / 添加', '{\"__token__\":\"***\",\"row\":{\"group\":\"basic\",\"type\":\"string\",\"name\":\"corpId\",\"title\":\"企业ID\",\"setting\":{\"table\":\"\",\"conditions\":\"\",\"key\":\"\",\"value\":\"\"},\"value\":\"FSCID_9A5F069FC01BD6193463F2E71672CD0A\",\"content\":\"value1|title1\\r\\nvalue2|title2\",\"tip\":\"\",\"rule\":\"\",\"extend\":\"\"}}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36', 1614914777);
 INSERT INTO `fa_admin_log` VALUES (51, 1, 'admin', '/ozEyjwQdGP.php/general.config/edit', '常规管理 / 系统配置 / 编辑', '{\"__token__\":\"***\",\"row\":{\"name\":\"我的网站\",\"beian\":\"\",\"cdnurl\":\"\",\"version\":\"1.0.1\",\"timezone\":\"Asia\\/Shanghai\",\"forbiddenip\":\"\",\"languages\":\"{&quot;backend&quot;:&quot;zh-cn&quot;,&quot;frontend&quot;:&quot;zh-cn&quot;}\",\"fixedpage\":\"dashboard\",\"youzan\":\"{&quot;client_id&quot;:&quot;c346b8b39599aaa677&quot;,&quot;client_secret&quot;:&quot;b27a803f9bcbd1de827381d1908bb00e&quot;}\",\"fxiaoke\":\"{&quot;appId&quot;:&quot;FSAID_131984d&quot;,&quot;appSecret&quot;:&quot;fffa814258734095aba2a1004fb21575&quot;,&quot;permanentCode&quot;:&quot;EA7EE44BAC06A6184B9EB6387E797D1F&quot;}\",\"openUserId\":\"FSUID_AA4249653FB37294711EB0C2462DDC5C\",\"corpId\":\"FSCID_9A5F069FC01BD6193463F2E71672CD0A\"}}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36', 1614915681);
 INSERT INTO `fa_admin_log` VALUES (52, 1, 'admin', '/ozEyjwQdGP.php/general.config/edit', '常规管理 / 系统配置 / 编辑', '{\"__token__\":\"***\",\"row\":{\"name\":\"我的网站\",\"beian\":\"\",\"cdnurl\":\"\",\"version\":\"1.0.1\",\"timezone\":\"Asia\\/Shanghai\",\"forbiddenip\":\"\",\"languages\":\"{&quot;backend&quot;:&quot;zh-cn&quot;,&quot;frontend&quot;:&quot;zh-cn&quot;}\",\"fixedpage\":\"dashboard\",\"youzan\":\"{&quot;client_id&quot;:&quot;c346b8b39599aaa677&quot;,&quot;client_secret&quot;:&quot;b27a803f9bcbd1de827381d1908bb00e&quot;}\",\"fxiaoke\":\"{&quot;appId&quot;:&quot;FSAID_131984d&quot;,&quot;appSecret&quot;:&quot;fffa814258734095aba2a1004fb21575&quot;,&quot;permanentCode&quot;:&quot;EA7EE44BAC06A6184B9EB6387E797D1F&quot;}\",\"openUserId\":\"FSUID_AA4249653FB37294711EB0C2462DDC5C\",\"corpId\":\"FSCID_9A5F069FC01BD6193463F2E71672CD0A\"}}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36', 1614916079);
+INSERT INTO `fa_admin_log` VALUES (53, 0, 'Unknown', '/ozEyjwQdGP.php/index/login?url=%2FozEyjwQdGP.php', '', '{\"url\":\"\\/ozEyjwQdGP.php\",\"__token__\":\"***\",\"username\":\"admin\",\"password\":\"***\",\"captcha\":\"wuqb\"}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0', 1615010910);
+INSERT INTO `fa_admin_log` VALUES (54, 0, 'Unknown', '/ozEyjwQdGP.php/index/login?url=%2FozEyjwQdGP.php', '', '{\"url\":\"\\/ozEyjwQdGP.php\",\"__token__\":\"***\",\"username\":\"admin\",\"password\":\"***\",\"captcha\":\"jwow\"}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0', 1615010920);
+INSERT INTO `fa_admin_log` VALUES (55, 1, 'admin', '/ozEyjwQdGP.php/index/login?url=%2FozEyjwQdGP.php', '登录', '{\"url\":\"\\/ozEyjwQdGP.php\",\"__token__\":\"***\",\"username\":\"admin\",\"password\":\"***\",\"captcha\":\"vrnj\"}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0', 1615010924);
+INSERT INTO `fa_admin_log` VALUES (56, 1, 'admin', '/ozEyjwQdGP.php/auth/rule/multi', '权限管理 / 菜单规则', '{\"action\":\"\",\"ids\":\"85\",\"params\":\"ismenu=1\"}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0', 1615038228);
+INSERT INTO `fa_admin_log` VALUES (57, 1, 'admin', '/ozEyjwQdGP.php/command/execute/ids/1', '在线命令管理 / 运行', '{\"ids\":\"1\"}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0', 1615038233);
+INSERT INTO `fa_admin_log` VALUES (58, 1, 'admin', '/ozEyjwQdGP.php/auth/rule/multi', '权限管理 / 菜单规则', '{\"action\":\"\",\"ids\":\"85\",\"params\":\"ismenu=0\"}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0', 1615038245);
+INSERT INTO `fa_admin_log` VALUES (59, 1, 'admin', '/ozEyjwQdGP.php/index/login?url=%2FozEyjwQdGP.php', '登录', '{\"url\":\"\\/ozEyjwQdGP.php\",\"__token__\":\"***\",\"username\":\"admin\",\"password\":\"***\",\"captcha\":\"pmcy\"}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0', 1615081904);
 
 -- ----------------------------
 -- Table structure for fa_area
@@ -138,7 +145,11 @@ CREATE TABLE `fa_area`  (
   `lat` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '纬度',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `pid`(`pid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '地区表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '地区表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of fa_area
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for fa_attachment
@@ -163,7 +174,7 @@ CREATE TABLE `fa_attachment`  (
   `storage` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'local' COMMENT '存储位置',
   `sha1` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '文件 sha1编码',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '附件表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '附件表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of fa_attachment
@@ -183,7 +194,7 @@ CREATE TABLE `fa_auth_group`  (
   `updatetime` int(10) NULL DEFAULT NULL COMMENT '更新时间',
   `status` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '状态',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '分组表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '分组表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of fa_auth_group
@@ -192,7 +203,6 @@ INSERT INTO `fa_auth_group` VALUES (1, 0, 'Admin group', '*', 1490883540, 149088
 INSERT INTO `fa_auth_group` VALUES (2, 1, 'Second group', '13,14,16,15,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,40,41,42,43,44,45,46,47,48,49,50,55,56,57,58,59,60,61,62,63,64,65,1,9,10,11,7,6,8,2,4,5', 1490883540, 1505465692, 'normal');
 INSERT INTO `fa_auth_group` VALUES (3, 2, 'Third group', '1,4,9,10,11,13,14,15,16,17,40,41,42,43,44,45,46,47,48,49,50,55,56,57,58,59,60,61,62,63,64,65,5', 1490883540, 1502205322, 'normal');
 INSERT INTO `fa_auth_group` VALUES (4, 1, 'Second group 2', '1,4,13,14,15,16,17,55,56,57,58,59,60,61,62,63,64,65', 1490883540, 1502205350, 'normal');
-INSERT INTO `fa_auth_group` VALUES (5, 2, 'Third group 2', '1,2,6,7,8,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34', 1490883540, 1502205344, 'normal');
 
 -- ----------------------------
 -- Table structure for fa_auth_group_access
@@ -204,7 +214,7 @@ CREATE TABLE `fa_auth_group_access`  (
   UNIQUE INDEX `uid_group_id`(`uid`, `group_id`) USING BTREE,
   INDEX `uid`(`uid`) USING BTREE,
   INDEX `group_id`(`group_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '权限分组表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '权限分组表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of fa_auth_group_access
@@ -233,7 +243,7 @@ CREATE TABLE `fa_auth_rule`  (
   UNIQUE INDEX `name`(`name`) USING BTREE,
   INDEX `pid`(`pid`) USING BTREE,
   INDEX `weigh`(`weigh`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 99 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '节点表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 99 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '节点表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of fa_auth_rule
@@ -320,7 +330,7 @@ INSERT INTO `fa_auth_rule` VALUES (81, 'file', 79, 'user/rule/del', 'Del', 'fa f
 INSERT INTO `fa_auth_rule` VALUES (82, 'file', 79, 'user/rule/add', 'Add', 'fa fa-circle-o', '', '', 0, 1516374729, 1516374729, 0, 'normal');
 INSERT INTO `fa_auth_rule` VALUES (83, 'file', 79, 'user/rule/edit', 'Edit', 'fa fa-circle-o', '', '', 0, 1516374729, 1516374729, 0, 'normal');
 INSERT INTO `fa_auth_rule` VALUES (84, 'file', 79, 'user/rule/multi', 'Multi', 'fa fa-circle-o', '', '', 0, 1516374729, 1516374729, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (85, 'file', 0, 'command', '在线命令管理', 'fa fa-terminal', '', '', 0, 1614649201, 1614650501, 0, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (85, 'file', 0, 'command', '在线命令管理', 'fa fa-terminal', '', '', 0, 1614649201, 1615038245, 0, 'normal');
 INSERT INTO `fa_auth_rule` VALUES (86, 'file', 85, 'command/index', '查看', 'fa fa-circle-o', '', '', 0, 1614649201, 1614649201, 0, 'normal');
 INSERT INTO `fa_auth_rule` VALUES (87, 'file', 85, 'command/add', '添加', 'fa fa-circle-o', '', '', 0, 1614649201, 1614649201, 0, 'normal');
 INSERT INTO `fa_auth_rule` VALUES (88, 'file', 85, 'command/detail', '详情', 'fa fa-circle-o', '', '', 0, 1614649201, 1614649201, 0, 'normal');
@@ -357,7 +367,7 @@ CREATE TABLE `fa_category`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `weigh`(`weigh`, `id`) USING BTREE,
   INDEX `pid`(`pid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '分类表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '分类表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of fa_category
@@ -391,13 +401,14 @@ CREATE TABLE `fa_command`  (
   `updatetime` int(10) UNSIGNED NULL DEFAULT NULL COMMENT '更新时间',
   `status` enum('successed','failured') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'failured' COMMENT '状态',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '在线命令表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '在线命令表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of fa_command
 -- ----------------------------
 INSERT INTO `fa_command` VALUES (1, 'crud', '[\"--table=fa_push_log\"]', 'php think crud --table=fa_push_log', 'Build Successed', 1614650260, 1614650260, 1614650260, 'successed');
 INSERT INTO `fa_command` VALUES (2, 'menu', '[\"--controller=PushLog\"]', 'php think menu --controller=PushLog', 'Build Successed!', 1614650269, 1614650269, 1614650269, 'successed');
+INSERT INTO `fa_command` VALUES (3, 'crud', '[\"--table=fa_push_log\"]', 'php think crud --table=fa_push_log', 'Build Successed', 1615038233, 1615038233, 1615038233, 'successed');
 
 -- ----------------------------
 -- Table structure for fa_config
@@ -417,7 +428,7 @@ CREATE TABLE `fa_config`  (
   `setting` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '配置',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `name`(`name`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 24 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '系统配置' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 24 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '系统配置' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of fa_config
@@ -457,7 +468,11 @@ CREATE TABLE `fa_ems`  (
   `ip` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT 'IP',
   `createtime` int(10) NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '邮箱验证码表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '邮箱验证码表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of fa_ems
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for fa_push_log
@@ -465,6 +480,7 @@ CREATE TABLE `fa_ems`  (
 DROP TABLE IF EXISTS `fa_push_log`;
 CREATE TABLE `fa_push_log`  (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `order_sn` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '订单号',
   `push_type` enum('create','paid','success') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '触发场景:create=交易创建,paid=交易支付,success=交易成功',
   `trigger_time` int(10) NULL DEFAULT NULL COMMENT '触发时间',
   `push_data` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '推送消息',
@@ -472,12 +488,11 @@ CREATE TABLE `fa_push_log`  (
   `sync_result` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'CRM返回结果',
   `sync_time` int(10) NULL DEFAULT NULL COMMENT '同步时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '推送日志表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '推送日志表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of fa_push_log
 -- ----------------------------
-INSERT INTO `fa_push_log` VALUES (1, 'create', 1614650307, '1', '1', '2', 1614650307);
 
 -- ----------------------------
 -- Table structure for fa_sms
@@ -492,7 +507,11 @@ CREATE TABLE `fa_sms`  (
   `ip` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT 'IP',
   `createtime` int(10) UNSIGNED NULL DEFAULT 0 COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '短信验证码表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '短信验证码表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of fa_sms
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for fa_test
@@ -531,7 +550,7 @@ CREATE TABLE `fa_test`  (
   `status` enum('normal','hidden') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'normal' COMMENT '状态',
   `state` enum('0','1','2') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '1' COMMENT '状态值:0=禁用,1=正常,2=推荐',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '测试表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '测试表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of fa_test
@@ -575,7 +594,7 @@ CREATE TABLE `fa_user`  (
   INDEX `username`(`username`) USING BTREE,
   INDEX `email`(`email`) USING BTREE,
   INDEX `mobile`(`mobile`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '会员表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '会员表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of fa_user
@@ -594,7 +613,7 @@ CREATE TABLE `fa_user_group`  (
   `updatetime` int(10) NULL DEFAULT NULL COMMENT '更新时间',
   `status` enum('normal','hidden') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '状态',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '会员组表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '会员组表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of fa_user_group
@@ -614,7 +633,11 @@ CREATE TABLE `fa_user_money_log`  (
   `memo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '备注',
   `createtime` int(10) NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '会员余额变动表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '会员余额变动表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of fa_user_money_log
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for fa_user_rule
@@ -632,7 +655,7 @@ CREATE TABLE `fa_user_rule`  (
   `weigh` int(10) NULL DEFAULT 0 COMMENT '权重',
   `status` enum('normal','hidden') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '状态',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '会员规则表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '会员规则表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of fa_user_rule
@@ -663,7 +686,11 @@ CREATE TABLE `fa_user_score_log`  (
   `memo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '备注',
   `createtime` int(10) NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '会员积分变动表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '会员积分变动表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of fa_user_score_log
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for fa_user_token
@@ -675,7 +702,11 @@ CREATE TABLE `fa_user_token`  (
   `createtime` int(10) NULL DEFAULT NULL COMMENT '创建时间',
   `expiretime` int(10) NULL DEFAULT NULL COMMENT '过期时间',
   PRIMARY KEY (`token`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '会员Token表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '会员Token表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of fa_user_token
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for fa_version
@@ -694,6 +725,10 @@ CREATE TABLE `fa_version`  (
   `weigh` int(10) NOT NULL DEFAULT 0 COMMENT '权重',
   `status` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '状态',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '版本表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '版本表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of fa_version
+-- ----------------------------
 
 SET FOREIGN_KEY_CHECKS = 1;
