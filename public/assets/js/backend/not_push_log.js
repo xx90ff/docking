@@ -5,13 +5,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             // 初始化表格参数配置
             Table.api.init({
                 extend: {
-                    index_url: 'push_log/index' + location.search,
-                    add_url: 'push_log/add',
-                    edit_url: 'push_log/edit',
-                    del_url: 'push_log/del',
-                    multi_url: 'push_log/multi',
-                    import_url: 'push_log/import',
-                    table: 'push_log',
+                    index_url: 'not_push_log/index' + location.search,
+                    add_url: 'not_push_log/add',
+                    edit_url: 'not_push_log/edit',
+                    del_url: 'not_push_log/del',
+                    multi_url: 'not_push_log/multi',
+                    import_url: 'not_push_log/import',
+                    table: 'not_push_log',
                 }
             });
 
@@ -26,12 +26,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id')},
-                        {field: 'msg_id', title: __('Msg_id'), operate: 'LIKE'},
                         {field: 'order_sn', title: __('Order_sn'), operate: 'LIKE'},
-                        {field: 'push_type', title: __('Push_type'), searchList: {"create":__('Push_type create'),"paid":__('Push_type paid'),"success":__('Push_type success')}, formatter: Table.api.formatter.normal},
+                        {field: 'push_type', title: __('Push_type'), operate: 'LIKE'},
                         {field: 'trigger_time', title: __('Trigger_time'), operate:'RANGE', addclass:'datetimerange', autocomplete:false, formatter: Table.api.formatter.datetime},
-                        {field: 'sync_status', title: __('Sync_status'), searchList: {"0":__('Sync_status 0'),"1":__('Sync_status 1')}, formatter: Table.api.formatter.status},
-                        {field: 'sync_time', title: __('Sync_time'), operate:'RANGE', addclass:'datetimerange', autocomplete:false, formatter: Table.api.formatter.datetime},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]
                 ]

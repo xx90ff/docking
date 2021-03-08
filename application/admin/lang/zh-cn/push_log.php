@@ -2,6 +2,7 @@
 
 return [
     'Id'                => 'ID',
+    'Msg_id'            => '消息唯一标示',
     'Order_sn'          => '订单号',
     'Push_type'         => '触发场景',
     'Push_type create'  => '交易创建',
