@@ -154,7 +154,7 @@ class Fxiaoke
                     'field_6uKqS__c' => $data['full_order_info']['order_info']['tid'],
                     'order_amount' => $data['full_order_info']['pay_info']['total_fee'],
                     'field_qLr1g__c' => $data['full_order_info']['address_info']['receiver_tel'],
-                    'order_time' => date('ymd',strtotime($data['full_order_info']['order_info']['created'])),
+                    'order_time' => strtotime($data['full_order_info']['order_info']['created']) * 1000,
                 ],
                 'details' => [
                     'SalesOrderProductObj' => $salesOrderProductObj
@@ -191,7 +191,7 @@ class Fxiaoke
                 'field_BGl0D__c' => $v['_id'],
                 'field_omXMk__c' => $v['field_3ZB9M__c'],
                 'field_kC1f7__c' => $v['field_mgM2m__c'],
-                'payment_time' => date('ymd',strtotime($data['order_info']['pay_time'])),
+                'payment_time' => strtotime($data['order_info']['pay_time']) * 1000,
             ];
 
             array_push($orderPaymentObj,$obj);
@@ -205,7 +205,7 @@ class Fxiaoke
             'data' => [
                 'object_data' => [
                     'dataObjectApiName' => "PaymentObj",
-                    'payment_time' => date('ymd',strtotime($data['order_info']['pay_time'])),
+                    'payment_time' => strtotime($data['order_info']['pay_time']) * 1000,
                     'field_o2Q55__c' => $orders['account_id'],
                     'payment_amount' => $data['pay_info']['payment'],
                     'field_s6c8v__c' => 'option1',
@@ -240,7 +240,7 @@ class Fxiaoke
             'data' => [
                 'object_data' => [
                     'dataObjectApiName' => "AccountObj",
-                    'name' => $data['address_info']['receiver_name'],
+                    'name' => $data['address_info']['receiver_name'].$data['buyer_info']['buyer_id'],
                     'tel' => $data['address_info']['receiver_tel'],
                     'currency__c' => 'option1',//币别:人民币
                     'account_source' => '4S9vxg1Vb', //来源默认有赞

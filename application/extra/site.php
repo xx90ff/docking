@@ -48,4 +48,5 @@ return array (
   ),
   'openUserId' => 'FSUID_AA4249653FB37294711EB0C2462DDC5C',
   'corpId' => 'FSCID_9A5F069FC01BD6193463F2E71672CD0A',
+  'businessCategory' => '7',
 );
