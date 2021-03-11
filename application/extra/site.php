@@ -46,7 +46,7 @@ return array (
     'appSecret' => 'fffa814258734095aba2a1004fb21575',
     'permanentCode' => 'EA7EE44BAC06A6184B9EB6387E797D1F',
   ),
-  'openUserId' => 'FSUID_AA4249653FB37294711EB0C2462DDC5C',
+  'openUserId' => 'FSUID_348A0A10A4E05B7D8A04ADFEBB064DB1',
   'corpId' => 'FSCID_9A5F069FC01BD6193463F2E71672CD0A',
   'businessCategory' => '7',
 );

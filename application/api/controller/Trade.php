@@ -84,17 +84,22 @@ class Trade extends Api
      * 交易创建
      *
      */
-    protected function tradeCreate()
+    public function tradeCreate()
     {
         $tid = $this->data['full_order_info']['order_info']['tid'];
 
         //查询是否存在此订单
-        $this->isRecord = PushLog::where(['push_type'=>'create','order_sn'=>$tid])->column('id') ? 1 : 0;
+        $sync_status = PushLog::where(['push_type'=>'create','order_sn'=>$tid])->field('sync_status')->find();
+        if(!empty($sync_status) && $sync_status->sync_status){
+            exit();
+        }else{
+            $this->isRecord = PushLog::where(['push_type'=>'paid','order_sn'=>$tid])->column('id') ? 1 : 0;
+        }
 
-        //查询客户是否存在
-        $accountList = $this->fxiaoke->getList('AccountObj',[
+        //查询联系人是否存在
+        $contactList = $this->fxiaoke->getList('ContactObj',[
             [
-                'field_name' => 'tel',
+                'field_name' => 'mobile1',
                 'field_values' => $this->data['full_order_info']['address_info']['receiver_tel'],
                 'operator' => 'EQ',
             ],
@@ -106,24 +111,56 @@ class Trade extends Api
         ]);
 
         //不存在
-        if($accountList['errorCode'] == 0 && count($accountList['data']['dataList'])  == 0){
-            $result = $this->createAccount($tid);
-            $dataId = $result['dataId'];
+        if($contactList['errorCode'] == 0 && count($contactList['data']['dataList'])  == 0){
+            //创建客户
+            $accountResult = $this->createAccount($tid);
+            //客户ID
+            $accountId = $accountResult['dataId'];
+            //创建联系人
+            $contactResult = $this->createContact($tid,$accountId);
+            //联系人ID
+            $contactId = $contactResult['dataId'];
         }else{
             //产品是否有一项为工商管理分类
             $businessCategory = $this->isBusinessCategory();
             //若有工商管理分类，则新建客户
             if($businessCategory){
-                $result = $this->createAccount($tid);
-                $dataId = $result['dataId'];
+                //创建客户
+                $accountResult = $this->createAccount($tid);
+                //客户ID
+                $accountId = $accountResult['dataId'];
+                //创建联系人
+                $contactResult = $this->createContact($tid,$accountId);
+                //联系人ID
+                $contactId = $contactResult['dataId'];
             }else{
-                $result = $accountList['data']['dataList'][0];
-                $dataId = $result['_id'];
+                //联系人信息
+                $contactResult = $contactList['data']['dataList'][0];
+                //联系人ID
+                $contactId = $contactResult['_id'];
+
+                //查询客户信息
+                $accountList = $this->fxiaoke->getList('AccountObj',[
+                    [
+                        'field_name' => 'tel',
+                        'field_values' => $this->data['full_order_info']['address_info']['receiver_tel'],
+                        'operator' => 'EQ',
+                    ],
+                    [
+                        'field_name' => 'life_status',
+                        'field_values' => 'normal',
+                        'operator' => 'EQ',
+                    ]
+                ]);
+                //客户信息
+                $accountResult = $accountList['data']['dataList'][0];
+                //客户ID
+                $accountId = $accountResult['_id'];
             }
         }
 
         //同步CRM销售订单
-        $result = $this->fxiaoke->createOrder($this->data,$dataId);
+        $result = $this->fxiaoke->createOrder($this->data,$accountId,$contactId);
 
         //同步状态
         if($result['errorCode'] == 0){
@@ -140,12 +177,17 @@ class Trade extends Api
      * 交易支付
      *
      */
-    protected function tradeBuyerPay()
+    public function tradeBuyerPay()
     {
         $tid = $this->data['full_order_info']['order_info']['tid'];
 
         //查询是否存在此订单
-        $this->isRecord = PushLog::where(['push_type'=>'paid','order_sn'=>$tid])->column('id') ? 1 : 0;
+        $sync_status = PushLog::where(['push_type'=>'paid','order_sn'=>$tid])->field('sync_status')->find();
+        if(!empty($sync_status) && $sync_status->sync_status){
+            exit();
+        }else{
+            $this->isRecord = PushLog::where(['push_type'=>'paid','order_sn'=>$tid])->column('id') ? 1 : 0;
+        }
 
         //根据有赞订单号查询订单详细信息
         $orderList = $this->fxiaoke->getList('SalesOrderObj',[
@@ -159,10 +201,10 @@ class Trade extends Api
         //创建回款对象
         $payResult = $this->fxiaoke->createPaymentObj($this->data['full_order_info'],$orderList['data']['dataList'][0]);
 
-        //创建回款对象成功，修改销售订单状态
+        //创建回款对象成功，修改销售订单收款状态
         if($payResult['errorCode'] == 0){
             $upResult = $this->fxiaoke->updateOrder($this->data,$orderList['data']['dataList'][0],['field_Td3Of__c'=>'de0Eh4gdS']);
-//            print_r($upResult);die;
+
             //保存同步结果
             if($upResult['errorCode'] == 0){
                 //保存同步结果
@@ -182,10 +224,15 @@ class Trade extends Api
      * 交易成功
      *
      */
-    protected function tradeSuccess()
+    public function tradeSuccess()
     {
         //查询是否存在此订单
-        $this->isRecord = PushLog::where(['push_type'=>'success','order_sn'=>$this->data['tid']])->column('id') ? 1 : 0;
+        $sync_status = PushLog::where(['push_type'=>'success','order_sn'=>$this->data['tid']])->field('sync_status')->find();
+        if(!empty($sync_status) && $sync_status->sync_status){
+            exit();
+        }else{
+            $this->isRecord = PushLog::where(['push_type'=>'success','order_sn'=>$this->data['tid']])->column('id') ? 1 : 0;
+        }
 
         //根据有赞订单号查询订单详细信息
         $orderList = $this->fxiaoke->getList('SalesOrderObj',[
@@ -196,8 +243,8 @@ class Trade extends Api
             ]
         ]);
 
-        //修改销售订单对象
-        $result = $this->fxiaoke->updateOrder($this->data,$orderList['data']['dataList'][0],['confirmed_receive_date'=>$this->data['update_time']]);
+        //修改销售订单对象(收货时间)
+        $result = $this->fxiaoke->updateOrder($this->data,$orderList['data']['dataList'][0],['confirmed_receive_date'=>strtotime($this->data['update_time']) * 1000]);
 
         //修改销售订单对象成功
         if($result['errorCode'] == 0){
@@ -208,6 +255,24 @@ class Trade extends Api
             $this->savePushLog($this->data['tid'],'success',0,$result);
             exit();
         }
+    }
+
+    /**
+     * 创建联系人
+     *
+     */
+    protected function createContact($tid,$accountId)
+    {
+        //创建客户
+        $result = $this->fxiaoke->createContact($this->data['full_order_info'],$accountId);
+
+        //创建失败
+        if($result['errorCode'] != 0){
+            $this->savePushLog($tid,'create',0,$result);
+            exit();
+        }
+
+        return $result;
     }
 
     /**

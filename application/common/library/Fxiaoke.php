@@ -99,10 +99,13 @@ class Fxiaoke
      * 创建销售订单对象
      *
      */
-    public function createOrder($data,$account_id)
+    public function createOrder($data,$account_id,$contactId)
     {
         //产品详情
         $salesOrderProductObj = [];
+
+        //产品类型
+        $category = [];
 
         //根据产品编码查询产品详细信息
         foreach ($data['full_order_info']['orders'] as $k=>$v){
@@ -115,20 +118,20 @@ class Fxiaoke
                         'operator' => 'EQ',
                     ]
                 ]);
+
                 //产品存在
                 if(count($goodsList['data']['dataList']) > 0){
+                    $category[] = $goodsList['data']['dataList'][0]['category'];
+
                     $goods = [
-                        'quantity' => $v['num'],
-                        'sales_price' => $v['price'],
-                        'subtotal' => $v['total_fee'],
-                        'life_status' => 'normal',
-                        'discount' => 0,
-                        'field_BZnw6__c' => 'c1jbw8hxa',
-                        'lock_status ' => '0',//锁定状态
-                        'product_price' => $goodsList['data']['dataList'][0]['price'],
-                        'product_id' => $goodsList['data']['dataList'][0]['_id'],
-                        'field_mgM2m__c' => $goodsList['data']['dataList'][0]['category'],
-                        'name' => $goodsList['data']['dataList'][0]['product_code'],
+                        'product_id' => $goodsList['data']['dataList'][0]['_id'], //产品名称
+                        'product_price' => $goodsList['data']['dataList'][0]['price'], //标准价格(元）
+                        'discount' => 0, //折扣率
+                        'quantity' => $v['num'], //数量
+                        'sales_price' => $v['price'], //销售单价（元）
+                        'field_mgM2m__c' => $goodsList['data']['dataList'][0]['category'], //产品分类
+                        'field_BZnw6__c' => 'c1jbw8hxa', //是否内包外包
+                        'subtotal' => $v['total_fee'], //订单交易额
                     ];
                     array_push($salesOrderProductObj,$goods);
                 }
@@ -143,18 +146,26 @@ class Fxiaoke
             'data' => [
                 'object_data' => [
                     'dataObjectApiName' => "SalesOrderObj",
-                    'order_status' => 6,
-                    'field_AoeY5__c' => '3epkbo5io',//订单来源
-                    'field_Td3Of__c' => 'p773bstt4',//收款状态
-                    'field_z7g58__c' => 'yTgougual',//订单编号前缀
+                    'account_id' => $account_id,//客户
+                    'order_amount' => $data['full_order_info']['pay_info']['total_fee'],//订单总金额
                     'receipt_type' => 'wuU61s1ex',//订单性质
-                    'account_id' => $account_id,
-                    'lock_status ' => '0',//锁定状态
-                    'owner' => ['FSUID_348A0A10A4E05B7D8A04ADFEBB064DB1'],//负责人
-                    'field_6uKqS__c' => $data['full_order_info']['order_info']['tid'],
-                    'order_amount' => $data['full_order_info']['pay_info']['total_fee'],
-                    'field_qLr1g__c' => $data['full_order_info']['address_info']['receiver_tel'],
+                    'field_lLh0C__c' => 'j72ob1uu8',//销售组织
+                    'field_AoeY5__c' => '3epkbo5io',//订单来源
                     'order_time' => strtotime($data['full_order_info']['order_info']['created']) * 1000,
+                    'field_11l66__c' => $account_id,//被服务主体
+                    'field_0p914__c' => strtotime($data['full_order_info']['order_info']['created']) * 1000,//服务起始日期
+                    'field_4atGg__c' => (strtotime($data['full_order_info']['order_info']['created']) + 604800) * 1000,//服务终止日期
+                    'field_42A60__c' => '129qDtLy1',//收款条件
+                    'field_5sQ2C__c' => '9S3i0j9aB',//服务方式
+                    'field_d2IW5__c' => '49usHpyl9',//是否拆分业绩
+                    'field_8weB5__c' => $category,//产品类型
+                    'field_61X4R__c' => $contactId,//客户联系人
+                    'field_14D1i__c' => [1002],//销售部门
+                    'field_Fs9mo__c' => $data['full_order_info']['pay_info']['total_fee'],//订单总金额
+                    'field_z7g58__c' => 'yTgougual',//订单编号前缀
+                    'field_6uKqS__c' => $data['full_order_info']['order_info']['tid'], //有赞订单号
+                    'owner' => ['FSUID_348A0A10A4E05B7D8A04ADFEBB064DB1'],//负责人
+                    'field_qLr1g__c' => $data['full_order_info']['address_info']['receiver_tel'] //联系方式
                 ],
                 'details' => [
                     'SalesOrderProductObj' => $salesOrderProductObj
@@ -174,27 +185,32 @@ class Fxiaoke
         //获取订单产品
         $goodsList = $this->getList('SalesOrderProductObj',[
             [
-                'field_name' => 'field_fb1ce__c',
+                'field_name' => 'field_fb1ce__c', //销售订单号
                 'field_values' => $orders['name'],
                 'operator' => 'EQ',
             ]
         ]);
 
         $orderPaymentObj = [];
-        foreach ($goodsList['data']['dataList'] as $k=>$v){
-            $obj = [
-                'field_lC6gi__c' => $v['subtotal'],
-                'payment_amount' => $data['orders'][$k]['payment'],
-                'account_id' => $orders['account_id'],
-                'order_id' => $v['order_id'],
-                'field_7UTb1__c' => '123456',
-                'field_BGl0D__c' => $v['_id'],
-                'field_omXMk__c' => $v['field_3ZB9M__c'],
-                'field_kC1f7__c' => $v['field_mgM2m__c'],
-                'payment_time' => strtotime($data['order_info']['pay_time']) * 1000,
-            ];
+        if(!empty($goodsList['data']['dataList'])){
+            foreach ($goodsList['data']['dataList'] as $k=>$v){
+                $obj = [
+                    'field_ckLsq__c' => $v['product_price'], //本次应收金额（元）
+                    'payment_amount' => $v['product_price'], //本次实收金额（元）
+                    'order_id' => $v['order_id'],//销售订单编号
+                    'field_ie2no__c' => '5f0ff4299b09cb000129d9d6',//银行
+                    'field_BGl0D__c' => $v['_id'], //产品
+                    'field_omXMk__c' => $v['field_3ZB9M__c'],//产品编号
+                    'field_kC1f7__c' => $v['field_mgM2m__c'],//产品分类
+                    'field_7UTb1__c' => $data['order_info']['tid'],//银行流水号
+                    'field_lC6gi__c' => $v['product_price'], //订单交易额
+                    'account_id' => $orders['account_id'],//客户名称
+                    'payment_time' => strtotime($data['order_info']['pay_time']) * 1000,//回款日期
+                    'life_status' => 'normal',//状态
+                ];
 
-            array_push($orderPaymentObj,$obj);
+                array_push($orderPaymentObj,$obj);
+            }
         }
 
         //组装参数
@@ -205,17 +221,18 @@ class Fxiaoke
             'data' => [
                 'object_data' => [
                     'dataObjectApiName' => "PaymentObj",
-                    'payment_time' => strtotime($data['order_info']['pay_time']) * 1000,
-                    'field_o2Q55__c' => $orders['account_id'],
-                    'payment_amount' => $data['pay_info']['payment'],
-                    'field_s6c8v__c' => 'option1',
-                    'order_id' => $orders['extend_obj_data_id'],
-                    'field_7cvz9__c' => 'hID1cebo2',
+                    'payment_time' => strtotime($data['order_info']['pay_time']) * 1000,//回款日期
+                    'payment_amount' => $data['pay_info']['payment'],//本次回款总金额
+                    'order_id' => $orders['_id'],//订单编号
+                    'payment_term' => 'p4a0vc4FS',//回款方式
+                    'account_id' => $orders['account_id'],//客户名称
+                    'field_ak3f4__c' => 'Wfng06MG2',//销售组织
+                    'field_s6c8v__c' => 'option1',//币种
+                    'field_navWt__c' => $orders['_id'],//销售订单
+                    'field_7cvz9__c' => 'hID1cebo2',//订单性质
+                    'field_h0A7N__c' => 'wzNpHC5Kj', //是否业绩拆分
                     'owner' => ['FSUID_348A0A10A4E05B7D8A04ADFEBB064DB1'],//负责人
-                    'payment_term' => 'p4a0vc4FS',
-                    'field_h0A7N__c' => 'wzNpHC5Kj',
-                    'field_ak3f4__c' => 'Wfng06MG2',
-                    'account_id' => $orders['account_id'],
+                    'life_status' => 'normal',//状态
                 ],
                 'details' => [
                     'OrderPaymentObj' => $orderPaymentObj
@@ -242,14 +259,18 @@ class Fxiaoke
                     'dataObjectApiName' => "AccountObj",
                     'name' => $data['address_info']['receiver_name'].$data['buyer_info']['buyer_id'],
                     'tel' => $data['address_info']['receiver_tel'],
-                    'currency__c' => 'option1',//币别:人民币
+//                    'area_location' => $data['address_info']['delivery_province'].$data['address_info']['delivery_city'].$data['address_info']['delivery_district'].$data['address_info']['delivery_address'],
                     'account_source' => '4S9vxg1Vb', //来源默认有赞
                     'field_oR2HS__c' => $data['buyer_info']['yz_open_id'],//有赞yz_open_id
-                    'province' => $data['address_info']['delivery_province'],
-                    'city' => $data['address_info']['delivery_city'],
-                    'district' => $data['address_info']['delivery_district'],
-                    'address' => $data['address_info']['delivery_address'],
+                    'field_w2D3Y__c' => '2nwc905uc', //客户分类
+                    'currency__c' => 'option1',//币别:人民币
                     'field_8hNvk__c' => 'option1', //客户来源默认销售自招
+                    'owner' => ['FSUID_348A0A10A4E05B7D8A04ADFEBB064DB1'],//负责人
+//                    'country' => '中国', //国家
+                    'province' => $data['address_info']['delivery_province'],//省
+                    'city' => $data['address_info']['delivery_city'],//市
+                    'district' => $data['address_info']['delivery_district'],//区
+                    'address' => $data['address_info']['delivery_address'],//详细地址
                 ]
             ],
         ];
@@ -257,6 +278,30 @@ class Fxiaoke
         return Http::sendRequest($this->domain.$this->api['create'],$params, 'POST');
     }
 
+    /**
+     * 创建联系人
+     *
+     */
+    public function createContact($data,$accountId)
+    {
+        //组装参数
+        $params  = [
+            'corpAccessToken' => $this->token,
+            'corpId' => $this->corpId,
+            'currentOpenUserId' => $this->openUserId,
+            'data' => [
+                'object_data' => [
+                    'dataObjectApiName' => "ContactObj",
+                    'name' => $data['address_info']['receiver_name'],//姓名
+                    'mobile1' => $data['address_info']['receiver_tel'],//手机1
+                    'account_id' => $accountId,//客户
+                    'owner' => ['FSUID_348A0A10A4E05B7D8A04ADFEBB064DB1'],//负责人
+                ]
+            ],
+        ];
+
+        return Http::sendRequest($this->domain.$this->api['create'],$params, 'POST');
+    }
 
     /**
      * 修改销售订单对象
