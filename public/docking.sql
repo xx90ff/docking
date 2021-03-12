@@ -11,7 +11,7 @@
  Target Server Version : 50726
  File Encoding         : 65001
 
- Date: 11/03/2021 16:05:59
+ Date: 12/03/2021 14:05:38
 */
 
 SET NAMES utf8mb4;
@@ -43,7 +43,7 @@ CREATE TABLE `fa_admin`  (
 -- ----------------------------
 -- Records of fa_admin
 -- ----------------------------
-INSERT INTO `fa_admin` VALUES (1, 'admin', 'Admin', '4c39215188c0d057d3160fe6e30e7296', '5e0721', '/assets/img/avatar.png', 'admin@admin.com', 0, 1615424986, '127.0.0.1', 1492186163, 1615424986, 'a92a869d-3653-490c-8ff7-f61150365267', 'normal');
+INSERT INTO `fa_admin` VALUES (1, 'admin', 'Admin', '4c39215188c0d057d3160fe6e30e7296', '5e0721', '/assets/img/avatar.png', 'admin@admin.com', 0, 1615519848, '127.0.0.1', 1492186163, 1615519848, 'c7b147e6-4e78-4662-8170-3602af062f9b', 'normal');
 
 -- ----------------------------
 -- Table structure for fa_admin_log
@@ -61,7 +61,7 @@ CREATE TABLE `fa_admin_log`  (
   `createtime` int(10) NULL DEFAULT NULL COMMENT '操作时间',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `name`(`username`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 82 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '管理员日志表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 83 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '管理员日志表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of fa_admin_log
@@ -147,6 +147,7 @@ INSERT INTO `fa_admin_log` VALUES (78, 1, 'admin', '/ozEyjwQdGP.php/index/login?
 INSERT INTO `fa_admin_log` VALUES (79, 1, 'admin', '/ozEyjwQdGP.php/general.config/edit', '常规管理 / 系统配置 / 编辑', '{\"__token__\":\"***\",\"row\":{\"name\":\"我的网站\",\"beian\":\"\",\"cdnurl\":\"\",\"version\":\"1.0.1\",\"timezone\":\"Asia\\/Shanghai\",\"forbiddenip\":\"\",\"languages\":\"{&quot;backend&quot;:&quot;zh-cn&quot;,&quot;frontend&quot;:&quot;zh-cn&quot;}\",\"fixedpage\":\"dashboard\",\"youzan\":\"{&quot;client_id&quot;:&quot;c346b8b39599aaa677&quot;,&quot;client_secret&quot;:&quot;b27a803f9bcbd1de827381d1908bb00e&quot;}\",\"fxiaoke\":\"{&quot;appId&quot;:&quot;FSAID_131984d&quot;,&quot;appSecret&quot;:&quot;fffa814258734095aba2a1004fb21575&quot;,&quot;permanentCode&quot;:&quot;EA7EE44BAC06A6184B9EB6387E797D1F&quot;}\",\"openUserId\":\"FSUID_348A0A10A4E05B7D8A04ADFEBB064DB1\",\"corpId\":\"FSCID_9A5F069FC01BD6193463F2E71672CD0A\",\"businessCategory\":\"7\"}}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36', 1615425167);
 INSERT INTO `fa_admin_log` VALUES (80, 1, 'admin', '/ozEyjwQdGP.php/general.config/edit', '常规管理 / 系统配置 / 编辑', '{\"__token__\":\"***\",\"row\":{\"name\":\"我的网站\",\"beian\":\"\",\"cdnurl\":\"\",\"version\":\"1.0.1\",\"timezone\":\"Asia\\/Shanghai\",\"forbiddenip\":\"\",\"languages\":\"{&quot;backend&quot;:&quot;zh-cn&quot;,&quot;frontend&quot;:&quot;zh-cn&quot;}\",\"fixedpage\":\"dashboard\",\"youzan\":\"{&quot;client_id&quot;:&quot;c346b8b39599aaa677&quot;,&quot;client_secret&quot;:&quot;b27a803f9bcbd1de827381d1908bb00e&quot;}\",\"fxiaoke\":\"{&quot;appId&quot;:&quot;FSAID_131984d&quot;,&quot;appSecret&quot;:&quot;fffa814258734095aba2a1004fb21575&quot;,&quot;permanentCode&quot;:&quot;EA7EE44BAC06A6184B9EB6387E797D1F&quot;}\",\"openUserId\":\"FSUID_AA4249653FB37294711EB0C2462DDC5C\",\"corpId\":\"FSCID_9A5F069FC01BD6193463F2E71672CD0A\",\"businessCategory\":\"7\"}}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36', 1615427998);
 INSERT INTO `fa_admin_log` VALUES (81, 1, 'admin', '/ozEyjwQdGP.php/general.config/edit', '常规管理 / 系统配置 / 编辑', '{\"__token__\":\"***\",\"row\":{\"name\":\"我的网站\",\"beian\":\"\",\"cdnurl\":\"\",\"version\":\"1.0.1\",\"timezone\":\"Asia\\/Shanghai\",\"forbiddenip\":\"\",\"languages\":\"{&quot;backend&quot;:&quot;zh-cn&quot;,&quot;frontend&quot;:&quot;zh-cn&quot;}\",\"fixedpage\":\"dashboard\",\"youzan\":\"{&quot;client_id&quot;:&quot;c346b8b39599aaa677&quot;,&quot;client_secret&quot;:&quot;b27a803f9bcbd1de827381d1908bb00e&quot;}\",\"fxiaoke\":\"{&quot;appId&quot;:&quot;FSAID_131984d&quot;,&quot;appSecret&quot;:&quot;fffa814258734095aba2a1004fb21575&quot;,&quot;permanentCode&quot;:&quot;EA7EE44BAC06A6184B9EB6387E797D1F&quot;}\",\"openUserId\":\"FSUID_348A0A10A4E05B7D8A04ADFEBB064DB1\",\"corpId\":\"FSCID_9A5F069FC01BD6193463F2E71672CD0A\",\"businessCategory\":\"7\"}}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36', 1615428227);
+INSERT INTO `fa_admin_log` VALUES (82, 1, 'admin', '/ozEyjwQdGP.php/index/login?url=%2FozEyjwQdGP.php', '登录', '{\"url\":\"\\/ozEyjwQdGP.php\",\"__token__\":\"***\",\"username\":\"admin\",\"password\":\"***\",\"captcha\":\"k7rn\"}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36', 1615519848);
 
 -- ----------------------------
 -- Table structure for fa_area
