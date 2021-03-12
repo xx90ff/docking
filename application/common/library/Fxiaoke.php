@@ -277,7 +277,7 @@ class Fxiaoke
             'data' => [
                 'object_data' => [
                     'dataObjectApiName' => "AccountObj",
-                    'name' => $data['address_info']['receiver_name'].$data['buyer_info']['buyer_id'],
+                    'name' => $data['address_info']['receiver_name'].'-'.$data['buyer_info']['buyer_id'],
                     'tel' => $data['address_info']['receiver_tel'],
 //                    'area_location' => $data['address_info']['delivery_province'].$data['address_info']['delivery_city'].$data['address_info']['delivery_district'].$data['address_info']['delivery_address'],
                     'account_source' => '4S9vxg1Vb', //来源默认有赞
