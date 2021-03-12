@@ -109,12 +109,12 @@ class Fxiaoke
 
         //根据产品编码查询产品详细信息
         foreach ($data['full_order_info']['orders'] as $k=>$v){
-            if(!empty($v['outer_item_id'])){
+            if(!empty($v['outer_sku_id'])){
                 //根据产品编码查询产品详细信息
                 $goodsList = $this->getList('ProductObj',[
                     [
                         'field_name' => 'product_code',
-                        'field_values' => $v['outer_item_id'],
+                        'field_values' => $v['outer_sku_id'],
                         'operator' => 'EQ',
                     ]
                 ]);
