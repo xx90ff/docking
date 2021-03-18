@@ -74,6 +74,9 @@ class Trade extends Api
             case 'trade_TradeBuyerPay':
                 $this->tradeBuyerPay();
                 break;
+            case 'trade_TradePaid':
+                $this->tradeBuyerPay();
+                break;
             case 'trade_TradeSuccess':
                 $this->tradeSuccess();
                 break;
