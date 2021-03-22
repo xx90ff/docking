@@ -94,13 +94,8 @@ class Trade extends Api
     {
         $tid = $this->data['full_order_info']['order_info']['tid'];
 
-        //查询是否存在此订单
-        $sync_status = PushLog::where(['push_type'=>'create','order_sn'=>$tid])->field('sync_status')->find();
-        if(!empty($sync_status) && $sync_status->sync_status){
-            exit();
-        }else{
-            $this->isRecord = PushLog::where(['push_type'=>'paid','order_sn'=>$tid])->column('id') ? 1 : 0;
-        }
+        //保存推送记录
+        $this->insertPushLog($tid,'create');
 
         //是否存在收货人信息
         if(empty($this->data['full_order_info']['address_info']['receiver_tel'])){
@@ -201,13 +196,8 @@ class Trade extends Api
     {
         $tid = $this->data['full_order_info']['order_info']['tid'];
 
-        //查询是否存在此订单
-        $sync_status = PushLog::where(['push_type'=>'paid','order_sn'=>$tid])->field('sync_status')->find();
-        if(!empty($sync_status) && $sync_status->sync_status){
-            exit();
-        }else{
-            $this->isRecord = PushLog::where(['push_type'=>'paid','order_sn'=>$tid])->column('id') ? 1 : 0;
-        }
+        //保存推送记录
+        $this->insertPushLog($tid,'paid');
 
         //根据有赞订单号查询订单详细信息
         $orderList = $this->fxiaoke->getList('SalesOrderObj',[
@@ -246,13 +236,8 @@ class Trade extends Api
      */
     public function tradeSuccess()
     {
-        //查询是否存在此订单
-        $sync_status = PushLog::where(['push_type'=>'success','order_sn'=>$this->data['tid']])->field('sync_status')->find();
-        if(!empty($sync_status) && $sync_status->sync_status){
-            exit();
-        }else{
-            $this->isRecord = PushLog::where(['push_type'=>'success','order_sn'=>$this->data['tid']])->column('id') ? 1 : 0;
-        }
+        //保存推送记录
+        $this->insertPushLog($this->data['tid'],'success');
 
         //根据有赞订单号查询订单详细信息
         $orderList = $this->fxiaoke->getList('SalesOrderObj',[
@@ -345,6 +330,23 @@ class Trade extends Api
     }
 
     /**
+     * 新增推送记录
+     *
+     */
+    protected function insertPushLog($order_sn,$push_type)
+    {
+        //组装参数
+        $data  = [
+            'msg_id' => $this->msg_id,
+            'order_sn' => $order_sn,
+            'push_type' => $push_type,
+            'trigger_time' => time(),
+        ];
+
+        PushLog::insert($data);
+    }
+
+    /**
      * 保存同步记录
      *
      */
@@ -362,7 +364,7 @@ class Trade extends Api
             'sync_time' => time(),
         ];
 
-        $this->isRecord ? PushLog::where(['order_sn'=>$data['order_sn'],'push_type'=>$push_type])->update($data) : PushLog::insert($data);
+        PushLog::where(['order_sn'=>$data['order_sn'],'push_type'=>$push_type])->update($data);
     }
 
     /**
