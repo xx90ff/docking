@@ -178,7 +178,7 @@ class Fxiaoke
                     'field_42A60__c' => '129qDtLy1',//收款条件
                     'field_5sQ2C__c' => '9S3i0j9aB',//服务方式
                     'field_d2IW5__c' => '49usHpyl9',//是否拆分业绩
-                    'field_8weB5__c' => $productType,//产品类型
+                    'field_8weB5__c' => array_unique($productType),//产品类型
                     'field_61X4R__c' => $contactId,//客户联系人
                     'field_14D1i__c' => [1002],//销售部门
                     'field_Fs9mo__c' => $data['full_order_info']['pay_info']['total_fee'],//订单总金额
