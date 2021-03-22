@@ -215,8 +215,8 @@ class Fxiaoke
         if(!empty($goodsList['data']['dataList'])){
             foreach ($goodsList['data']['dataList'] as $k=>$v){
                 $obj = [
-                    'field_ckLsq__c' => $data['pay_info']['payment'], //本次应收金额（元）
-                    'payment_amount' => $data['pay_info']['payment'], //本次实收金额（元）
+                    'field_ckLsq__c' => $data['orders'][$k]['price'], //本次应收金额（元）
+                    'payment_amount' => $data['orders'][$k]['price'], //本次实收金额（元）
                     'order_id' => $v['order_id'],//销售订单编号
                     'field_ie2no__c' => '5f0ff4299b09cb000129d9d6',//银行
                     'field_BGl0D__c' => $v['_id'], //产品
