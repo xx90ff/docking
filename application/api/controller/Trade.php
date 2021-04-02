@@ -71,7 +71,7 @@ class Trade extends Api
         switch ($data['type'])
         {
             case 'trade_TradeCreate':
-               $this->tradeCreate();
+                $this->tradeCreate();
                 break;
 //            case 'trade_TradeBuyerPay':
 //                $this->tradeBuyerPay();
@@ -106,21 +106,21 @@ class Trade extends Api
 
         //是否存在收货人信息
 //        if(empty($this->data['full_order_info']['address_info']['receiver_tel'])){
-            //不存在则取订单信息中手机号
-            $item_message = json_decode($this->data['full_order_info']['orders'][0]['item_message'],true);
-            if(empty($item_message) || empty($item_message['手机号'])){
-                $this->savePushLog($tid,'create',0,'item_message:'.json_encode($item_message));
-                exit();
-            }
+        //不存在则取订单信息中手机号
+        $item_message = json_decode($this->data['full_order_info']['orders'][0]['item_message'],true);
+        if(empty($item_message) || empty($item_message['手机号'])){
+            $this->savePushLog($tid,'create',0,'item_message:'.json_encode($item_message));
+            exit();
+        }
 
-            $this->data['full_order_info']['address_info']['receiver_tel'] = $item_message['手机号'];
+        $this->data['full_order_info']['address_info']['receiver_tel'] = $item_message['手机号'];
 
-            //收货人姓名
-            if(!empty($this->data['full_order_info']['buyer_info']['fans_nickname'])){
-                $this->data['full_order_info']['address_info']['receiver_name'] = $this->data['full_order_info']['buyer_info']['fans_nickname'];
-            }else{
-                $this->data['full_order_info']['address_info']['receiver_name'] = $item_message['手机号'];
-            }
+        //收货人姓名
+        if(!empty($this->data['full_order_info']['buyer_info']['fans_nickname'])){
+            $this->data['full_order_info']['address_info']['receiver_name'] = $this->data['full_order_info']['buyer_info']['fans_nickname'];
+        }else{
+            $this->data['full_order_info']['address_info']['receiver_name'] = $item_message['手机号'];
+        }
 //        }
 
         //查询联系人是否存在
@@ -238,23 +238,28 @@ class Trade extends Api
             ]
         ]);
 
+        if($orderList['errorCode'] == 0 && count($orderList['data']['dataList'])  == 0) {
+            $this->savePushLog($tid,'paid',0,$orderList);
+            exit();
+        }
+
         //创建回款对象
         $payResult = $this->fxiaoke->createPaymentObj($this->data['full_order_info'],$orderList['data']['dataList'][0]);
 
         //创建回款对象成功，修改销售订单收款状态
         if($payResult['errorCode'] == 0){
-            $upResult = $this->fxiaoke->updateOrder($this->data,$orderList['data']['dataList'][0],['field_Td3Of__c'=>'de0Eh4gdS']);
+            // $upResult = $this->fxiaoke->updateOrder($this->data,$orderList['data']['dataList'][0],['field_Td3Of__c'=>'de0Eh4gdS']);
 
             //保存同步结果
-            if($upResult['errorCode'] == 0){
-                //保存同步结果
-                $this->savePushLog($tid,'paid',1,$upResult);
-                exit('success');
+            // if($upResult['errorCode'] == 0){
+            //保存同步结果
+            $this->savePushLog($tid,'paid',1,$payResult);
+            exit('success');
 //                $this->success('success',null,0);
-            }else{
-                $this->savePushLog($tid,'paid',0,$upResult);
-                exit();
-            }
+            // }else{
+            //     $this->savePushLog($tid,'paid',0,$upResult);
+            //     exit();
+            // }
         }else{
             $this->savePushLog($tid,'paid',0,$payResult);
             exit();

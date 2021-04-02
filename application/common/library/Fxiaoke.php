@@ -205,18 +205,28 @@ class Fxiaoke
         //获取订单产品
         $goodsList = $this->getList('SalesOrderProductObj',[
             [
-                'field_name' => 'field_fb1ce__c', //销售订单号
-                'field_values' => $orders['name'],
+                'field_name' => 'order_id', //销售订单号
+                'field_values' => $orders['_id'],
                 'operator' => 'EQ',
             ]
         ]);
+        if($goodsList['errorCode'] == 0 && count($goodsList['data']['dataList'])  == 0) {
+            return ['errorCode'=>-1,'values'=>[
+                [
+                    'field_name' => 'field_fb1ce__c', //销售订单号
+                    'field_values' => $orders['name'],
+                    'operator' => 'EQ',
+                ]
+            ],'goodsList'=>$goodsList];
+        }
 
+        $price = 0;
         $orderPaymentObj = [];
         if(!empty($goodsList['data']['dataList'])){
             foreach ($goodsList['data']['dataList'] as $k=>$v){
                 $obj = [
-                    'field_ckLsq__c' => $data['orders'][$k]['price'], //本次应收金额（元）
-                    'payment_amount' => $data['orders'][$k]['price'], //本次实收金额（元）
+                    'field_ckLsq__c' => $data['orders'][$k]['total_fee'], //本次应收金额（元）
+                    'payment_amount' => $data['orders'][$k]['total_fee'], //本次实收金额（元）
                     'order_id' => $v['order_id'],//销售订单编号
                     'field_ie2no__c' => '5f0ff4299b09cb000129d9d6',//银行
                     'field_BGl0D__c' => $v['_id'], //产品
@@ -399,7 +409,7 @@ class Fxiaoke
      */
     public function describe($apiName)
     {
-         //组装参数
+        //组装参数
         $params  = [
             'corpAccessToken' => $this->token,
             'corpId' => $this->corpId,
